@@ -1,0 +1,209 @@
+package model.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import model.Category;
+import model.Product;
+import util.ConnectDB;
+
+public class ProductDAO implements Accessible<Product> {
+
+    public List<Product> listWithFilter(String typeId, String priceRange, String discountFilter, String sortPrice) {
+        List<Product> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
+        if (typeId != null && !typeId.isEmpty())
+            sql.append(" AND typeId = " + typeId);
+        if (priceRange != null && !priceRange.isEmpty()) {
+            switch (priceRange) {
+                case "low":  sql.append(" AND price < 5000000"); break;
+                case "mid":  sql.append(" AND price >= 5000000 AND price <= 15000000"); break;
+                case "high": sql.append(" AND price > 15000000"); break;
+            }
+        }
+        if (discountFilter != null && !discountFilter.isEmpty()) {
+            switch (discountFilter) {
+                case "yes": sql.append(" AND discount > 0"); break;
+                case "no":  sql.append(" AND discount = 0"); break;
+            }
+        }
+        if ("asc".equals(sortPrice)) sql.append(" ORDER BY price ASC");
+        else if ("desc".equals(sortPrice)) sql.append(" ORDER BY price DESC");
+
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql.toString());
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(mapProduct(rs));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    @Override
+    public List<Product> listAll() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(mapProduct(rs));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public List<Category> listAllCategory() {
+        List<Category> list = new ArrayList<>();
+        String sql = "SELECT * FROM Categories";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Category(rs.getInt("typeId"), rs.getString("categoryName"), rs.getString("memo")));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public Product getLast() {
+        String sql = "SELECT TOP 1 * FROM products ORDER BY postedDate DESC";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return mapProduct(rs);
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
+    public Product getLastByCategory(String typeId) {
+        String sql = "SELECT TOP 1 * FROM products WHERE typeId = ? ORDER BY postedDate DESC";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, typeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mapProduct(rs);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
+    public List<Product> listProductByCategory(String typeId) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE typeId = ?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, typeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public List<Product> listProductByAccount(String account) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE account = ?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, account);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public List<Product> listProductByName(String txtSearch) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE productName LIKE ?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, "%" + txtSearch.trim() + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    @Override
+    public Product getObjectById(String id) {
+        String sql = "SELECT * FROM products WHERE productId = ?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mapProduct(rs);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
+    @Override
+    public int insertRec(Product p) {
+        String sql = "INSERT INTO products(productId, productName, productImage, brief, postedDate, typeId, account, unit, price, discount) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, p.getProductId());
+            ps.setString(2, p.getProductName());
+            ps.setString(3, p.getProductImage());
+            ps.setString(4, p.getBrief());
+            ps.setTimestamp(5, p.getPostedDate());
+            ps.setInt(6, p.getType().getTypeId());
+            ps.setString(7, p.getAccount().getAccount());
+            ps.setString(8, p.getUnit());
+            ps.setInt(9, p.getPrice());
+            ps.setInt(10, p.getDiscount());
+            return ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    @Override
+    public int updateRec(Product p) {
+        String sql = "UPDATE products SET productName=?, productImage=?, brief=?, typeId=?, unit=?, price=?, discount=? WHERE productId=?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, p.getProductName());
+            ps.setString(2, p.getProductImage());
+            ps.setString(3, p.getBrief());
+            ps.setInt(4, p.getType().getTypeId());
+            ps.setString(5, p.getUnit());
+            ps.setInt(6, p.getPrice());
+            ps.setInt(7, p.getDiscount());
+            ps.setString(8, p.getProductId());
+            return ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    @Override
+    public int deleteRec(Product p) {
+        String sql = "DELETE FROM products WHERE productId=?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, p.getProductId());
+            return ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    private Product mapProduct(ResultSet rs) throws Exception {
+        Product p = new Product();
+        p.setProductId(rs.getString("productId"));
+        p.setProductName(rs.getString("productName"));
+        p.setProductImage(rs.getString("productImage"));
+        p.setBrief(rs.getString("brief"));
+        p.setPostedDate(rs.getTimestamp("postedDate"));
+        p.setUnit(rs.getString("unit"));
+        p.setPrice(rs.getInt("price"));
+        p.setDiscount(rs.getInt("discount"));
+        Category c = new Category();
+        c.setTypeId(rs.getInt("typeId"));
+        p.setType(c);
+        model.Account acc = new model.Account();
+        acc.setAccount(rs.getString("account"));
+        p.setAccount(acc);
+        return p;
+    }
+}
