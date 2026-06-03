@@ -35,7 +35,7 @@ public class OrderDAO {
     }
 
     private void insertOrderDetails(Connection con, int orderId, Map<String, Integer> cart) throws Exception {
-        String sql = "INSERT INTO orderDetails(orderId, productId, quantity, price, discount) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO orderdetails(orderId, productId, quantity, price, discount) VALUES(?,?,?,?,?)";
         ProductDAO pdao = new ProductDAO();
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             for (Map.Entry<String, Integer> entry : cart.entrySet()) {
@@ -81,7 +81,7 @@ public class OrderDAO {
     // Lấy chi tiết order
     public List<OrderDetail> getOrderDetails(int orderId) {
         List<OrderDetail> list = new ArrayList<>();
-        String sql = "SELECT od.*, p.productName, p.productImage FROM orderDetails od "
+        String sql = "SELECT od.*, p.productName, p.productImage FROM orderdetails od "
                 + "JOIN products p ON od.productId = p.productId WHERE od.orderId = ?";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -106,7 +106,7 @@ public class OrderDAO {
     // Kiểm tra product còn order không
     public List<Order> listByProduct(String productId) {
         List<Order> list = new ArrayList<>();
-        String sql = "SELECT o.* FROM orders o JOIN orderDetails od ON o.orderId = od.orderId WHERE od.productId = ?";
+        String sql = "SELECT o.* FROM orders o JOIN orderdetails od ON o.orderId = od.orderId WHERE od.productId = ?";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, productId);

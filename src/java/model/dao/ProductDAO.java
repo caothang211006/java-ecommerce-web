@@ -13,29 +13,55 @@ public class ProductDAO implements Accessible<Product> {
 
     public List<Product> listWithFilter(String typeId, String priceRange, String discountFilter, String sortPrice) {
         List<Product> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
-        if (typeId != null && !typeId.isEmpty())
-            sql.append(" AND typeId = " + typeId);
+        if (typeId != null && !typeId.isEmpty()) {
+            sql.append(" AND typeId = ?");
+            try {
+                params.add(Integer.valueOf(typeId));
+            } catch (NumberFormatException ex) {
+                return list;
+            }
+        }
         if (priceRange != null && !priceRange.isEmpty()) {
             switch (priceRange) {
-                case "low":  sql.append(" AND price < 5000000"); break;
-                case "mid":  sql.append(" AND price >= 5000000 AND price <= 15000000"); break;
-                case "high": sql.append(" AND price > 15000000"); break;
+                case "low":
+                    sql.append(" AND price < ?");
+                    params.add(5000000);
+                    break;
+                case "mid":
+                    sql.append(" AND price >= ? AND price <= ?");
+                    params.add(5000000);
+                    params.add(15000000);
+                    break;
+                case "high":
+                    sql.append(" AND price > ?");
+                    params.add(15000000);
+                    break;
             }
         }
         if (discountFilter != null && !discountFilter.isEmpty()) {
             switch (discountFilter) {
-                case "yes": sql.append(" AND discount > 0"); break;
-                case "no":  sql.append(" AND discount = 0"); break;
+                case "yes":
+                    sql.append(" AND discount > 0");
+                    break;
+                case "no":
+                    sql.append(" AND discount = 0");
+                    break;
             }
         }
-        if ("asc".equals(sortPrice)) sql.append(" ORDER BY price ASC");
-        else if ("desc".equals(sortPrice)) sql.append(" ORDER BY price DESC");
+        if ("asc".equals(sortPrice)) {
+            sql.append(" ORDER BY price ASC");
+        } else if ("desc".equals(sortPrice)) {
+            sql.append(" ORDER BY price DESC");
+        }
 
         try (Connection con = new ConnectDB().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql.toString());
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(mapProduct(rs));
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            bindParams(ps, params);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
@@ -54,7 +80,7 @@ public class ProductDAO implements Accessible<Product> {
 
     public List<Category> listAllCategory() {
         List<Category> list = new ArrayList<>();
-        String sql = "SELECT * FROM Categories";
+        String sql = "SELECT * FROM categories";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -66,7 +92,7 @@ public class ProductDAO implements Accessible<Product> {
     }
 
     public Product getLast() {
-        String sql = "SELECT TOP 1 * FROM products ORDER BY postedDate DESC";
+        String sql = "SELECT * FROM products ORDER BY postedDate DESC LIMIT 1";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -76,7 +102,7 @@ public class ProductDAO implements Accessible<Product> {
     }
 
     public Product getLastByCategory(String typeId) {
-        String sql = "SELECT TOP 1 * FROM products WHERE typeId = ? ORDER BY postedDate DESC";
+        String sql = "SELECT * FROM products WHERE typeId = ? ORDER BY postedDate DESC LIMIT 1";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, typeId);
@@ -186,6 +212,12 @@ public class ProductDAO implements Accessible<Product> {
             return ps.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
         return 0;
+    }
+
+    private void bindParams(PreparedStatement ps, List<Object> params) throws Exception {
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
     }
 
     private Product mapProduct(ResultSet rs) throws Exception {

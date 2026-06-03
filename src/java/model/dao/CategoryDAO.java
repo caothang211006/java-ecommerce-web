@@ -13,7 +13,7 @@ public class CategoryDAO implements Accessible<Category> {
     @Override
     public List<Category> listAll() {
         List<Category> list = new ArrayList<>();
-        String sql = "SELECT * FROM Categories";
+        String sql = "SELECT * FROM categories";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -30,7 +30,7 @@ public class CategoryDAO implements Accessible<Category> {
 
     @Override
     public Category getObjectById(String id) {
-        String sql = "SELECT * FROM Categories WHERE typeId = ?";
+        String sql = "SELECT * FROM categories WHERE typeId = ?";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, Integer.parseInt(id));
@@ -49,7 +49,7 @@ public class CategoryDAO implements Accessible<Category> {
 
     @Override
     public int insertRec(Category c) {
-        String sql = "INSERT INTO Categories(categoryName, memo) VALUES(?, ?)";
+        String sql = "INSERT INTO categories(categoryName, memo) VALUES(?, ?)";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, c.getCategoryName());
@@ -61,7 +61,7 @@ public class CategoryDAO implements Accessible<Category> {
 
     @Override
     public int updateRec(Category c) {
-        String sql = "UPDATE Categories SET categoryName=?, memo=? WHERE typeId=?";
+        String sql = "UPDATE categories SET categoryName=?, memo=? WHERE typeId=?";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, c.getCategoryName());
@@ -74,7 +74,7 @@ public class CategoryDAO implements Accessible<Category> {
 
     @Override
     public int deleteRec(Category c) {
-        String sql = "DELETE FROM Categories WHERE typeId=?";
+        String sql = "DELETE FROM categories WHERE typeId=?";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, c.getTypeId());

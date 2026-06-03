@@ -1,13 +1,11 @@
 package controller.account;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Account;
 import model.dao.AccountDAO;
 import model.dao.ProductDAO;
@@ -21,7 +19,7 @@ public class AccountDeleteController extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        // Kiểm tra còn product không
+        // Kiá»ƒm tra cÃ²n product khÃ´ng
         if (!new ProductDAO().listProductByAccount(id).isEmpty()) {
             request.setAttribute("error", "Cannot delete! This account still has products.");
             request.setAttribute("listA", new AccountDAO().listAll());

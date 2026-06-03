@@ -13,7 +13,7 @@ public class AccountDAO implements Accessible<Account> {
     @Override
     public List<Account> listAll() {
         List<Account> list = new ArrayList<>();
-        String sql = "SELECT * FROM Accounts";
+        String sql = "SELECT * FROM accounts";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(mapAccount(rs));
@@ -26,7 +26,7 @@ public class AccountDAO implements Accessible<Account> {
 
     @Override
     public Account getObjectById(String id) {
-        String sql = "SELECT * FROM Accounts WHERE account = ?";
+        String sql = "SELECT * FROM accounts WHERE account = ?";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, id);
             try ( ResultSet rs = ps.executeQuery()) {
@@ -42,7 +42,7 @@ public class AccountDAO implements Accessible<Account> {
 
     @Override
     public int insertRec(Account acc) {
-        String sql = "INSERT INTO Accounts(account, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem) VALUES(?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO accounts(account, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem) VALUES(?,?,?,?,?,?,?,?,?)";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, acc.getAccount());
             ps.setString(2, acc.getPass());
@@ -62,7 +62,7 @@ public class AccountDAO implements Accessible<Account> {
 
     @Override
     public int updateRec(Account acc) {
-        String sql = "UPDATE Accounts SET pass=?, lastName=?, firstName=?, birthday=?, gender=?, phone=?, isUse=?, roleInSystem=? WHERE account=?";
+        String sql = "UPDATE accounts SET pass=?, lastName=?, firstName=?, birthday=?, gender=?, phone=?, isUse=?, roleInSystem=? WHERE account=?";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, acc.getPass());
             ps.setString(2, acc.getLastName());
@@ -82,7 +82,7 @@ public class AccountDAO implements Accessible<Account> {
 
     @Override
     public int deleteRec(Account acc) {
-        String sql = "DELETE FROM Accounts WHERE account=?";
+        String sql = "DELETE FROM accounts WHERE account=?";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, acc.getAccount());
             return ps.executeUpdate();
@@ -94,7 +94,7 @@ public class AccountDAO implements Accessible<Account> {
 
     public List<Account> listByRole(int role) {
         List<Account> list = new ArrayList<>();
-        String sql = "SELECT * FROM Accounts WHERE roleInSystem = ?";
+        String sql = "SELECT * FROM accounts WHERE roleInSystem = ?";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, role);
             try ( ResultSet rs = ps.executeQuery()) {
@@ -109,7 +109,7 @@ public class AccountDAO implements Accessible<Account> {
     }
 
     public void updateSessionId(String account, String sessionId) {
-        String sql = "UPDATE Accounts SET sessionId = ? WHERE account = ?";
+        String sql = "UPDATE accounts SET sessionId = ? WHERE account = ?";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, sessionId);
             ps.setString(2, account);
@@ -120,7 +120,7 @@ public class AccountDAO implements Accessible<Account> {
     }
 
     public int countActiveAdmins() {
-        String sql = "SELECT COUNT(*) FROM Accounts WHERE roleInSystem = 1 AND isUse = 1";
+        String sql = "SELECT COUNT(*) FROM accounts WHERE roleInSystem = 1 AND isUse = 1";
         try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);

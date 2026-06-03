@@ -1,14 +1,12 @@
 package controller.product;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Category;
 import model.Product;
 import model.dao.CategoryDAO;
@@ -23,7 +21,7 @@ public class ProductUpdateController extends HttpServlet {
 
         ProductDAO dao = new ProductDAO();
 
-        // GET -> hiện form chỉnh sửa
+        // GET -> hiá»‡n form chá»‰nh sá»­a
         if (request.getMethod().equalsIgnoreCase("GET")) {
             String id = request.getParameter("id");
             Product p = dao.getObjectById(id);
@@ -34,7 +32,7 @@ public class ProductUpdateController extends HttpServlet {
             return;
         }
 
-        // POST -> xử lý cập nhật
+        // POST -> xá»­ lÃ½ cáº­p nháº­t
         Product p = new Product();
         p.setProductId(request.getParameter("productId"));
         p.setProductName(request.getParameter("productName"));

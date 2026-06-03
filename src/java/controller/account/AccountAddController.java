@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Account;
 import model.dao.AccountDAO;
 
@@ -18,13 +17,13 @@ public class AccountAddController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // GET -> hiện form thêm
+        // GET -> hiá»‡n form thÃªm
         if (request.getMethod().equalsIgnoreCase("GET")) {
             request.getRequestDispatcher("/private/Account/addAccount.jsp").forward(request, response);
             return;
         }
 
-        // POST -> xử lý thêm
+        // POST -> xá»­ lÃ½ thÃªm
         Account acc = new Account();
         acc.setAccount(request.getParameter("account"));
         acc.setPass(request.getParameter("pass"));

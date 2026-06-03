@@ -9,7 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Account;
 import model.Product;
 import model.dao.AccountDAO;
@@ -33,7 +32,7 @@ public class AccountShowController extends HttpServlet {
         }
         request.setAttribute("listA", list);
 
-        // Tính phân khúc cho từng account
+        // TÃ­nh phÃ¢n khÃºc cho tá»«ng account
         Map<String, String> segmentMap = new HashMap<>();
         ViewHistoryDAO vhDao = new ViewHistoryDAO();
         ProductDAO pdao = new ProductDAO();

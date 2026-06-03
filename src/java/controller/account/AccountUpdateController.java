@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Account;
 import model.dao.AccountDAO;
 
@@ -20,7 +19,7 @@ public class AccountUpdateController extends HttpServlet {
 
         AccountDAO dao = new AccountDAO();
 
-        // GET -> hiện form chỉnh sửa
+        // GET -> hiá»‡n form chá»‰nh sá»­a
         if (request.getMethod().equalsIgnoreCase("GET")) {
             String id = request.getParameter("id");
             Account acc = dao.getObjectById(id);
@@ -29,11 +28,11 @@ public class AccountUpdateController extends HttpServlet {
             return;
         }
 
-        // POST -> xử lý cập nhật
+        // POST -> xá»­ lÃ½ cáº­p nháº­t
         Account acc = new Account();
         acc.setAccount(request.getParameter("account"));
 
-        // Kiểm tra không cho hạ role admin cuối cùng xuống Staff
+        // Kiá»ƒm tra khÃ´ng cho háº¡ role admin cuá»‘i cÃ¹ng xuá»‘ng Staff
         int newRole = Integer.parseInt(request.getParameter("role"));
         Account current = dao.getObjectById(acc.getAccount());
         if (current != null && current.getRoleInSystem() == 1
@@ -43,7 +42,7 @@ public class AccountUpdateController extends HttpServlet {
             request.getRequestDispatcher("/private/Account/updateAccount.jsp").forward(request, response);
             return;
         }
-        // Giữ pass cũ nếu user để trống
+        // Giá»¯ pass cÅ© náº¿u user Ä‘á»ƒ trá»‘ng
         String newPass = request.getParameter("pass");
         if (newPass == null || newPass.trim().isEmpty()) {
             acc.setPass(current.getPass());

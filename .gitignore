@@ -1,1 +1,14 @@
-src/java/util/ConnectDB.java 
+build/
+dist/
+nbproject/private/
+
+*.class
+*.war
+*.ear
+
+.DS_Store
+Thumbs.db
+
+.env
+.env.*
+!.env.example

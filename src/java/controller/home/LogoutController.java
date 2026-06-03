@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Account;
-import model.dao.AccountDAO;
 import model.dao.CartDAO;
 
 @WebServlet(urlPatterns = {"/logout"})
@@ -22,7 +21,7 @@ public class LogoutController extends HttpServlet {
             Account acc = (Account) session.getAttribute("acc");
             if (acc != null) {
 
-                // Lưu cart vào DB
+                // LÆ°u cart vÃ o DB
                 Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
                 new CartDAO().saveCart(acc.getAccount(), cart);
             }

@@ -11,7 +11,7 @@ public class ViewHistoryDAO {
 
     public List<String> loadViewHistory(String account) {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT productId FROM viewHistory WHERE account = ? ORDER BY viewedAt DESC";
+        String sql = "SELECT productId FROM viewhistory WHERE account = ? ORDER BY viewedAt DESC";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, account);
@@ -23,17 +23,12 @@ public class ViewHistoryDAO {
     }
 
     public void saveView(String account, String productId) {
-        String sql = "IF EXISTS (SELECT 1 FROM viewHistory WHERE account=? AND productId=?) "
-                + "UPDATE viewHistory SET viewedAt = CURRENT_TIMESTAMP WHERE account=? AND productId=? "
-                + "ELSE INSERT INTO viewHistory(account, productId) VALUES(?,?)";
+        String sql = "INSERT INTO viewhistory(account, productId, viewedAt) VALUES(?, ?, CURRENT_TIMESTAMP) "
+                + "ON DUPLICATE KEY UPDATE viewedAt = CURRENT_TIMESTAMP";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, account);
             ps.setString(2, productId);
-            ps.setString(3, account);
-            ps.setString(4, productId);
-            ps.setString(5, account);
-            ps.setString(6, productId);
             ps.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
     }

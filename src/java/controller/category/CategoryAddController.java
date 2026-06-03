@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Category;
 import model.dao.CategoryDAO;
 
@@ -18,13 +17,13 @@ public class CategoryAddController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
 
-        // GET -> hiện form thêm
+        // GET -> hiá»‡n form thÃªm
         if (request.getMethod().equalsIgnoreCase("GET")) {
             request.getRequestDispatcher("/private/Category/addCategory.jsp").forward(request, response);
             return;
         }
 
-        // POST -> xử lý thêm
+        // POST -> xá»­ lÃ½ thÃªm
         Category c = new Category();
         c.setCategoryName(request.getParameter("categoryName"));
         c.setMemo(request.getParameter("memo"));

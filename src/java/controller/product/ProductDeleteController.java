@@ -1,7 +1,6 @@
 package controller.product;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +19,7 @@ public class ProductDeleteController extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        // Kiểm tra còn order không
+        // Kiá»ƒm tra cÃ²n order khÃ´ng
         if (!new OrderDAO().listByProduct(id).isEmpty()) {
             request.setAttribute("error", "Cannot delete! This product still has orders.");
             request.setAttribute("listP", new ProductDAO().listAll());
