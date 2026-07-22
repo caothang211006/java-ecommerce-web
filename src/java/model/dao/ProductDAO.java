@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Category;
 import model.Product;
 import util.ConnectDB;
 
 public class ProductDAO implements Accessible<Product> {
+
+    private static final Logger LOGGER = Logger.getLogger(ProductDAO.class.getName());
 
     public List<Product> listWithFilter(String typeId, String priceRange, String discountFilter, String sortPrice) {
         List<Product> list = new ArrayList<>();
@@ -67,7 +71,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listWithFilter failed", e);
         }
         return list;
     }
@@ -83,7 +87,7 @@ public class ProductDAO implements Accessible<Product> {
                 list.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listAll failed", e);
         }
         return list;
     }
@@ -98,7 +102,7 @@ public class ProductDAO implements Accessible<Product> {
                 list.add(new Category(rs.getInt("typeId"), rs.getString("categoryName"), rs.getString("memo")));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listAllCategory failed", e);
         }
         return list;
     }
@@ -112,7 +116,7 @@ public class ProductDAO implements Accessible<Product> {
                 return mapProduct(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.getLast failed", e);
         }
         return null;
     }
@@ -128,7 +132,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.getLastByCategory failed", e);
         }
         return null;
     }
@@ -145,7 +149,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listProductByCategory failed", e);
         }
         return list;
     }
@@ -162,7 +166,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listProductByAccount failed", e);
         }
         return list;
     }
@@ -179,7 +183,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listProductByName failed", e);
         }
         return list;
     }
@@ -196,7 +200,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.getObjectById failed", e);
         }
         return null;
     }
@@ -240,7 +244,7 @@ public class ProductDAO implements Accessible<Product> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.listByIds failed", e);
         }
 
         // SQL gives no ordering guarantee for IN, and the caller cares about
@@ -272,7 +276,7 @@ public class ProductDAO implements Accessible<Product> {
             ps.setInt(10, p.getDiscount());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.insertRec failed", e);
         }
         return 0;
     }
@@ -292,7 +296,7 @@ public class ProductDAO implements Accessible<Product> {
             ps.setString(8, p.getProductId());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.updateRec failed", e);
         }
         return 0;
     }
@@ -305,7 +309,7 @@ public class ProductDAO implements Accessible<Product> {
             ps.setString(1, p.getProductId());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ProductDAO.deleteRec failed", e);
         }
         return 0;
     }

@@ -5,9 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.ConnectDB;
 
 public class ViewHistoryDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(ViewHistoryDAO.class.getName());
 
     public List<String> loadViewHistory(String account) {
         List<String> list = new ArrayList<>();
@@ -21,7 +25,7 @@ public class ViewHistoryDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ViewHistoryDAO.loadViewHistory failed", e);
         }
         return list;
     }
@@ -35,7 +39,7 @@ public class ViewHistoryDAO {
             ps.setString(2, productId);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "ViewHistoryDAO.saveView failed", e);
         }
     }
 

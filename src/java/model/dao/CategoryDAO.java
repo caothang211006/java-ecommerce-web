@@ -5,10 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Category;
 import util.ConnectDB;
 
 public class CategoryDAO implements Accessible<Category> {
+
+    private static final Logger LOGGER = Logger.getLogger(CategoryDAO.class.getName());
 
     @Override
     public List<Category> listAll() {
@@ -25,7 +29,7 @@ public class CategoryDAO implements Accessible<Category> {
                 list.add(c);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CategoryDAO.listAll failed", e);
         }
         return list;
     }
@@ -46,7 +50,7 @@ public class CategoryDAO implements Accessible<Category> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CategoryDAO.getObjectById failed", e);
         }
         return null;
     }
@@ -60,7 +64,7 @@ public class CategoryDAO implements Accessible<Category> {
             ps.setString(2, c.getMemo());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CategoryDAO.insertRec failed", e);
         }
         return 0;
     }
@@ -75,7 +79,7 @@ public class CategoryDAO implements Accessible<Category> {
             ps.setInt(3, c.getTypeId());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CategoryDAO.updateRec failed", e);
         }
         return 0;
     }
@@ -88,7 +92,7 @@ public class CategoryDAO implements Accessible<Category> {
             ps.setInt(1, c.getTypeId());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CategoryDAO.deleteRec failed", e);
         }
         return 0;
     }

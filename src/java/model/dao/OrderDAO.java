@@ -7,12 +7,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Order;
 import model.OrderDetail;
 import model.Product;
 import util.ConnectDB;
 
 public class OrderDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(OrderDAO.class.getName());
 
     public int createOrder(String account, String address, String phone, Map<String, Integer> cart) {
         String sql = "INSERT INTO orders(account, address, phone) VALUES(?,?,?)";
@@ -30,7 +34,7 @@ public class OrderDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "OrderDAO.createOrder failed", e);
         }
         return -1;
     }
@@ -65,7 +69,7 @@ public class OrderDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "OrderDAO.listByAccount failed", e);
         }
         return list;
     }
@@ -80,7 +84,7 @@ public class OrderDAO {
                 list.add(mapOrder(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "OrderDAO.listAll failed", e);
         }
         return list;
     }
@@ -106,7 +110,7 @@ public class OrderDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "OrderDAO.getOrderDetails failed", e);
         }
         return list;
     }
@@ -123,7 +127,7 @@ public class OrderDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "OrderDAO.listByProduct failed", e);
         }
         return list;
     }
@@ -136,7 +140,7 @@ public class OrderDAO {
             ps.setInt(2, orderId);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "OrderDAO.updateStatus failed", e);
         }
     }
 

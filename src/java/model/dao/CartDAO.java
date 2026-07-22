@@ -5,9 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.ConnectDB;
 
 public class CartDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(CartDAO.class.getName());
 
     public Map<String, Integer> loadCart(String account) {
         Map<String, Integer> cart = new HashMap<>();
@@ -21,7 +25,7 @@ public class CartDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CartDAO.loadCart failed", e);
         }
         return cart;
     }
@@ -45,7 +49,7 @@ public class CartDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "CartDAO.saveCart failed", e);
         }
     }
 }

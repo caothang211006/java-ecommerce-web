@@ -5,11 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Account;
 import util.ConnectDB;
 import util.PasswordHasher;
 
 public class AccountDAO implements Accessible<Account> {
+
+    private static final Logger LOGGER = Logger.getLogger(AccountDAO.class.getName());
 
     /**
      * Hashes a password unless it already is a hash.
@@ -34,7 +38,7 @@ public class AccountDAO implements Accessible<Account> {
             ps.setString(2, account);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.upgradeStoredPassword failed", e);
         }
         return 0;
     }
@@ -50,7 +54,7 @@ public class AccountDAO implements Accessible<Account> {
                 list.add(mapAccount(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.listAll failed", e);
         }
         return list;
     }
@@ -67,7 +71,7 @@ public class AccountDAO implements Accessible<Account> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.getObjectById failed", e);
         }
         return null;
     }
@@ -88,7 +92,7 @@ public class AccountDAO implements Accessible<Account> {
             ps.setInt(9, acc.getRoleInSystem());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.insertRec failed", e);
         }
         return 0;
     }
@@ -109,7 +113,7 @@ public class AccountDAO implements Accessible<Account> {
             ps.setString(9, acc.getAccount());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.updateRec failed", e);
         }
         return 0;
     }
@@ -122,7 +126,7 @@ public class AccountDAO implements Accessible<Account> {
             ps.setString(1, acc.getAccount());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.deleteRec failed", e);
         }
         return 0;
     }
@@ -139,7 +143,7 @@ public class AccountDAO implements Accessible<Account> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.listByRole failed", e);
         }
         return list;
     }
@@ -152,7 +156,7 @@ public class AccountDAO implements Accessible<Account> {
             ps.setString(2, account);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.updateSessionId failed", e);
         }
     }
 
@@ -165,7 +169,7 @@ public class AccountDAO implements Accessible<Account> {
                 return rs.getInt(1);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "AccountDAO.countActiveAdmins failed", e);
         }
         return 0;
     }
