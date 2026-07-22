@@ -1,0 +1,27 @@
+# Shell scripts must keep LF line endings even when checked out on Windows.
+# A CRLF shebang makes Linux look for "/bin/sh\r", which does not exist, and the
+# container dies at startup with a confusing "no such file or directory".
+*.sh text eol=lf
+
+# Same reasoning: these are read by tools inside the Linux image.
+Dockerfile text eol=lf
+.dockerignore text eol=lf
+docker-compose.yml text eol=lf
+
+# SQL is piped into the MySQL client inside a Linux container.
+*.sql text eol=lf
+
+# Never apply line-ending conversion to binary files -- doing so corrupts them.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.jar binary
+*.war binary
+*.dll binary
+*.eot binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.otf binary
