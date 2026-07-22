@@ -217,3 +217,31 @@ CREATE TABLE orderdetails (
     CONSTRAINT fk_orderdetails_order FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE,
     CONSTRAINT fk_orderdetails_product FOREIGN KEY (productId) REFERENCES products(productId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Indexes for the sorts and filters the application actually issues.
+--
+-- Only columns that are NOT already covered are listed here. MySQL creates an
+-- index for every foreign key automatically, so products.typeId,
+-- products.account and the orderdetails/cart/viewhistory foreign keys are
+-- already indexed. cart and viewhistory are keyed on (account, productId), so
+-- "WHERE account = ?" already uses that primary key's leading column.
+--
+-- Note productName is deliberately absent: search uses LIKE '%term%', and a
+-- leading wildcard cannot use a B-tree index. Speeding that up needs a FULLTEXT
+-- index and a different query, which is a larger change than it is worth here.
+
+-- getLast(): ORDER BY postedDate DESC LIMIT 1
+CREATE INDEX idx_products_posted ON products (postedDate DESC);
+
+-- getLastByCategory(): WHERE typeId = ? ORDER BY postedDate DESC LIMIT 1.
+-- Composite so the filter and the sort are served by one index.
+CREATE INDEX idx_products_type_posted ON products (typeId, postedDate DESC);
+
+-- listWithFilter(): ORDER BY price
+CREATE INDEX idx_products_price ON products (price);
+
+-- loadViewHistory(): WHERE account = ? ORDER BY viewedAt DESC
+CREATE INDEX idx_viewhistory_account_viewed ON viewhistory (account, viewedAt DESC);
+
+-- listOrdersByAccount(): WHERE account = ? ORDER BY orderDate DESC
+CREATE INDEX idx_orders_account_date ON orders (account, orderDate DESC);

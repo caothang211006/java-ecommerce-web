@@ -33,20 +33,16 @@ public class HomeController extends HttpServlet {
         List<Category> listC = cdao.listAll();
         Product last = dao.getLast();
 
-        List<Product> viewedProductList = new ArrayList<>();
+        // Recently viewed products: one query for all of them rather than one
+        // query per id. Trim to five before querying so the database is never
+        // asked for rows that would be thrown away.
+        List<Product> viewedProductList;
         List<String> vIds = (List<String>) request.getSession().getAttribute("viewedProducts");
-        if (vIds != null) {
-            int count = 0;
-            for (String pid : vIds) {
-                if (count >= 5) {
-                    break;
-                }
-                Product vp = dao.getObjectById(pid);
-                if (vp != null) {
-                    viewedProductList.add(vp);
-                    count++;
-                }
-            }
+        if (vIds == null || vIds.isEmpty()) {
+            viewedProductList = new ArrayList<>();
+        } else {
+            List<String> wanted = vIds.size() > 5 ? vIds.subList(0, 5) : vIds;
+            viewedProductList = dao.listByIds(wanted);
         }
 
         request.setAttribute("listP", list);

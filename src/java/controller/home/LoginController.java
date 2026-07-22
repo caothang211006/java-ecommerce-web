@@ -77,16 +77,15 @@ public class LoginController extends HttpServlet {
         List<String> viewedIds = new ViewHistoryDAO().loadViewHistory(acc.getAccount());
         session.setAttribute("viewedProducts", viewedIds);
         if (!viewedIds.isEmpty()) {
-            ProductDAO pdao = new ProductDAO();
+            // One query for the whole view history instead of one per id.
+            // On a signed-in user with a long history this was the slowest part
+            // of logging in.
+            List<Product> viewed = new ProductDAO().listByIds(viewedIds);
             long totalPrice = 0;
-            int count = 0;
-            for (String pid : viewedIds) {
-                Product p = pdao.getObjectById(pid);
-                if (p != null) {
-                    totalPrice += p.getPrice();
-                    count++;
-                }
+            for (Product p : viewed) {
+                totalPrice += p.getPrice();
             }
+            int count = viewed.size();
             long avgPrice = count > 0 ? totalPrice / count : 0;
             String segment = avgPrice < 5000000
                     ? "Low income"

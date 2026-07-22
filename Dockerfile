@@ -18,7 +18,7 @@ RUN set -eux; \
     cp -R web/. build/web/; \
     find src/java -name "*.java" > sources.txt; \
     javac -encoding UTF-8 -source 8 -target 8 -nowarn \
-        -cp "/usr/local/tomcat/lib/servlet-api.jar:build/web/WEB-INF/lib/*" \
+        -cp "/usr/local/tomcat/lib/servlet-api.jar:/usr/local/tomcat/lib/tomcat-jdbc.jar:/usr/local/tomcat/lib/tomcat-juli.jar:build/web/WEB-INF/lib/*" \
         -d build/web/WEB-INF/classes \
         @sources.txt; \
     jar -cf dist/app.war -C build/web .

@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.Category;
 import model.Product;
 import util.ConnectDB;
@@ -197,6 +199,60 @@ public class ProductDAO implements Accessible<Product> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Loads several products in one round trip, preserving the order of the ids
+     * given.
+     *
+     * Callers used to loop over a list of ids calling getObjectById for each
+     * one. That is the classic N+1 problem: viewing five recently seen products
+     * meant five separate queries, and every one of them paid the full network
+     * latency to the database. This does the same work with a single
+     * "WHERE productId IN (...)".
+     *
+     * The placeholders are generated from the list size and the values are still
+     * bound through setString, so this stays a parameterised query -- no id is
+     * ever concatenated into the SQL.
+     */
+    public List<Product> listByIds(List<String> ids) {
+        List<Product> ordered = new ArrayList<>();
+        if (ids == null || ids.isEmpty()) {
+            return ordered;
+        }
+
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < ids.size(); i++) {
+            placeholders.append(i == 0 ? "?" : ",?");
+        }
+        String sql = "SELECT * FROM products WHERE productId IN (" + placeholders + ")";
+
+        Map<String, Product> byId = new HashMap<>();
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            for (int i = 0; i < ids.size(); i++) {
+                ps.setString(i + 1, ids.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Product p = mapProduct(rs);
+                    byId.put(p.getProductId(), p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // SQL gives no ordering guarantee for IN, and the caller cares about
+        // the order (most recently viewed first), so reorder here. Ids with no
+        // matching row -- a product deleted since it was viewed -- are skipped.
+        for (String id : ids) {
+            Product p = byId.get(id);
+            if (p != null) {
+                ordered.add(p);
+            }
+        }
+        return ordered;
     }
 
     @Override
