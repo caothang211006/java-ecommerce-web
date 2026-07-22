@@ -107,7 +107,12 @@ public class ConnectDB {
         loadDriver();
         DriverManager.setLoginTimeout(LOGIN_TIMEOUT_SECONDS);
         try {
-            return DriverManager.getConnection(url, user, password);
+            Connection connection = DriverManager.getConnection(url, user, password);
+            // Clear the sticky error. Without this, one transient failure leaves
+            // the banner on the home page for the lifetime of the JVM, long
+            // after the database has recovered.
+            lastErrorMessage = null;
+            return connection;
         } catch (SQLException ex) {
             String message = "Cannot connect to MySQL at " + safeUrl()
                     + " as user '" + user + "': " + ex.getMessage();
