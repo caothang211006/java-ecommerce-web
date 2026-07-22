@@ -18,7 +18,6 @@ public class CategoryUpdateController extends HttpServlet {
 
         CategoryDAO dao = new CategoryDAO();
 
-        // GET -> hiá»‡n form chá»‰nh sá»­a
         if (request.getMethod().equalsIgnoreCase("GET")) {
             String id = request.getParameter("id");
             Category c = dao.getObjectById(id);
@@ -27,7 +26,6 @@ public class CategoryUpdateController extends HttpServlet {
             return;
         }
 
-        // POST -> xá»­ lÃ½ cáº­p nháº­t
         Category c = new Category();
         c.setTypeId(Integer.parseInt(request.getParameter("typeId")));
         c.setCategoryName(request.getParameter("categoryName"));

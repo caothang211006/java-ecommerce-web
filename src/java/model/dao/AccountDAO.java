@@ -7,14 +7,45 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Account;
 import util.ConnectDB;
+import util.PasswordHasher;
 
 public class AccountDAO implements Accessible<Account> {
+
+    /**
+     * Hashes a password unless it already is a hash.
+     *
+     * The account edit form resubmits the stored value when the admin leaves
+     * the password box blank. Hashing unconditionally would hash the hash and
+     * lock the user out, so already-hashed values pass through untouched.
+     */
+    private static String hashIfNeeded(String pass) {
+        if (pass == null) {
+            return null;
+        }
+        return PasswordHasher.needsUpgrade(pass) ? PasswordHasher.hash(pass) : pass;
+    }
+
+    /** Rewrites a legacy plain-text row with a proper hash after a good login. */
+    public int upgradeStoredPassword(String account, String rawPassword) {
+        String sql = "UPDATE accounts SET pass=? WHERE account=?";
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, PasswordHasher.hash(rawPassword));
+            ps.setString(2, account);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     @Override
     public List<Account> listAll() {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM accounts";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(mapAccount(rs));
             }
@@ -27,9 +58,10 @@ public class AccountDAO implements Accessible<Account> {
     @Override
     public Account getObjectById(String id) {
         String sql = "SELECT * FROM accounts WHERE account = ?";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, id);
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapAccount(rs);
                 }
@@ -43,9 +75,10 @@ public class AccountDAO implements Accessible<Account> {
     @Override
     public int insertRec(Account acc) {
         String sql = "INSERT INTO accounts(account, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem) VALUES(?,?,?,?,?,?,?,?,?)";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, acc.getAccount());
-            ps.setString(2, acc.getPass());
+            ps.setString(2, hashIfNeeded(acc.getPass()));
             ps.setString(3, acc.getLastName());
             ps.setString(4, acc.getFirstName());
             ps.setDate(5, acc.getBirthday());
@@ -63,8 +96,9 @@ public class AccountDAO implements Accessible<Account> {
     @Override
     public int updateRec(Account acc) {
         String sql = "UPDATE accounts SET pass=?, lastName=?, firstName=?, birthday=?, gender=?, phone=?, isUse=?, roleInSystem=? WHERE account=?";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, acc.getPass());
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, hashIfNeeded(acc.getPass()));
             ps.setString(2, acc.getLastName());
             ps.setString(3, acc.getFirstName());
             ps.setDate(4, acc.getBirthday());
@@ -83,7 +117,8 @@ public class AccountDAO implements Accessible<Account> {
     @Override
     public int deleteRec(Account acc) {
         String sql = "DELETE FROM accounts WHERE account=?";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, acc.getAccount());
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -95,9 +130,10 @@ public class AccountDAO implements Accessible<Account> {
     public List<Account> listByRole(int role) {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM accounts WHERE roleInSystem = ?";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, role);
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapAccount(rs));
                 }
@@ -110,7 +146,8 @@ public class AccountDAO implements Accessible<Account> {
 
     public void updateSessionId(String account, String sessionId) {
         String sql = "UPDATE accounts SET sessionId = ? WHERE account = ?";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, sessionId);
             ps.setString(2, account);
             ps.executeUpdate();
@@ -121,7 +158,9 @@ public class AccountDAO implements Accessible<Account> {
 
     public int countActiveAdmins() {
         String sql = "SELECT COUNT(*) FROM accounts WHERE roleInSystem = 1 AND isUse = 1";
-        try ( Connection con = new ConnectDB().getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection con = new ConnectDB().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }

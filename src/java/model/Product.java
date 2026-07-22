@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author nguye
- */
 public class Product {
 
     private String productId;
@@ -26,7 +18,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productId, String productName, String productImage, String brief, Timestamp postedDate, Category type, Account account, String unit, int price, int discount) {
+    public Product(String productId, String productName, String productImage, String brief,
+            Timestamp postedDate, Category type, Account account, String unit, int price, int discount) {
         this.productId = productId;
         this.productName = productName;
         this.productImage = productImage;
@@ -121,9 +114,17 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "productId=" + productId + ", productName=" + productName + ", productImage=" + productImage + ", brief=" + brief + ", postedDate=" + postedDate + ", type=" + type + ", account=" + account + ", unit=" + unit + ", price=" + price + ", discount=" + discount + '}';
+        return "Product{"
+                + "productId=" + productId
+                + ", productName=" + productName
+                + ", productImage=" + productImage
+                + ", brief=" + brief
+                + ", postedDate=" + postedDate
+                + ", type=" + type
+                + ", account=" + account
+                + ", unit=" + unit
+                + ", price=" + price
+                + ", discount=" + discount
+                + '}';
     }
-
-    
-    
 }

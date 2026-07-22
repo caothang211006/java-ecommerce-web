@@ -20,7 +20,6 @@ public class OrderManageController extends HttpServlet {
         OrderDAO dao = new OrderDAO();
         String action = request.getParameter("action");
 
-        // Cập nhật status
         if ("updateStatus".equals(action)) {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             int status  = Integer.parseInt(request.getParameter("status"));
@@ -29,7 +28,6 @@ public class OrderManageController extends HttpServlet {
             return;
         }
 
-        // Xem chi tiết
         String orderIdParam = request.getParameter("orderId");
         if (orderIdParam != null) {
             int orderId = Integer.parseInt(orderIdParam);

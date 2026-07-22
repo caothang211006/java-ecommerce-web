@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<fmt:setLocale value="vi_VN"/>
+<fmt:setLocale value="en_US"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +16,7 @@
     <body>
         <jsp:include page="/Common/Menu.jsp"/>
         <div class="container mt-4" style="max-width:600px;">
-            <h3 class="mb-4">Xác nhận đơn hàng</h3>
+            <h3 class="mb-4">Confirm Order</h3>
 
             <c:if test="${not empty error}">
                 <div class="alert alert-danger">${error}</div>
@@ -24,24 +24,24 @@
 
             <form action="${pageContext.request.contextPath}/checkout" method="post">
                 <div class="form-group">
-                    <label>Họ tên</label>
+                    <label>Full Name</label>
                     <input type="text" class="form-control" value="${sessionScope.acc.firstName} ${sessionScope.acc.lastName}" readonly/>
                 </div>
                 <div class="form-group">
-                    <label>Số điện thoại <span class="text-danger">*</span></label>
+                    <label>Phone Number <span class="text-danger">*</span></label>
                     <input type="text" name="phone" class="form-control"
                            value="${sessionScope.acc.phone}" required/>
                 </div>
                 <div class="form-group">
-                    <label>Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                    <label>Shipping Address <span class="text-danger">*</span></label>
                     <textarea name="address" class="form-control" rows="3" required></textarea>
                 </div>
                 <div class="d-flex justify-content-between">
                     <a href="${pageContext.request.contextPath}/cart" class="btn btn-secondary">
-                        <i class="fa fa-arrow-left"></i> Quay lại giỏ hàng
+                        <i class="fa fa-arrow-left"></i> Back to Cart
                     </a>
                     <button type="submit" class="btn btn-success">
-                        <i class="fa fa-check"></i> Đặt hàng
+                        <i class="fa fa-check"></i> Place Order
                     </button>
                 </div>
             </form>

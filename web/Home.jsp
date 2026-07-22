@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<fmt:setLocale value="vi_VN"/>
+<fmt:setLocale value="en_US"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,10 +17,9 @@
     <body>
         <jsp:include page="/Common/Menu.jsp"></jsp:include>
 
-        <!-- Banner -->
         <div class="w-100 mb-3">
-            <img src="${pageContext.request.contextPath}/images/banners.png"
-                 class="w-100" style="height:300px; object-fit:cover;" alt="Banner"/>
+            <img src="${pageContext.request.contextPath}/images/banner.png?v=20260611"
+                 class="w-100" style="height:auto;" alt="Global sale banner"/>
         </div>
 
         <div class="container mt-3">
@@ -28,38 +27,43 @@
                 <jsp:include page="/Common/Left.jsp"></jsp:include>
 
                 <div class="col-sm-9">
+                    <c:if test="${not empty dbError}">
+                        <div class="alert alert-danger">
+                            <strong>Database connection failed.</strong>
+                            <div><c:out value="${dbError}"/></div>
+                        </div>
+                    </c:if>
 
-                    <!-- Filter & Sort bar -->
                     <form action="${pageContext.request.contextPath}/home" method="get" class="mb-3">
                         <input type="hidden" name="typeId" value="${param.typeId}"/>
                         <div class="row align-items-end">
                             <div class="col-md-3">
-                                <label class="font-weight-bold" style="font-size:13px;">Tầm giá</label>
+                                <label class="font-weight-bold" style="font-size:13px;">Price Range</label>
                                 <select name="priceRange" class="form-control form-control-sm">
-                                    <option value="">Tất cả</option>
-                                    <option value="low"  ${param.priceRange == 'low'  ? 'selected' : ''}>&lt; 5 triệu</option>
-                                    <option value="mid"  ${param.priceRange == 'mid'  ? 'selected' : ''}>5 - 15 triệu</option>
-                                    <option value="high" ${param.priceRange == 'high' ? 'selected' : ''}>&gt; 15 triệu</option>
+                                    <option value="">All</option>
+                                    <option value="low"  ${param.priceRange == 'low'  ? 'selected' : ''}>Under 5M VND</option>
+                                    <option value="mid"  ${param.priceRange == 'mid'  ? 'selected' : ''}>5M - 15M VND</option>
+                                    <option value="high" ${param.priceRange == 'high' ? 'selected' : ''}>Over 15M VND</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="font-weight-bold" style="font-size:13px;">Giảm giá</label>
+                                <label class="font-weight-bold" style="font-size:13px;">Discount</label>
                                 <select name="discountFilter" class="form-control form-control-sm">
-                                    <option value="">Tất cả</option>
-                                    <option value="yes" ${param.discountFilter == 'yes' ? 'selected' : ''}>Có giảm giá</option>
-                                    <option value="no"  ${param.discountFilter == 'no'  ? 'selected' : ''}>Không giảm giá</option>
+                                    <option value="">All</option>
+                                    <option value="yes" ${param.discountFilter == 'yes' ? 'selected' : ''}>On sale</option>
+                                    <option value="no"  ${param.discountFilter == 'no'  ? 'selected' : ''}>No discount</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="font-weight-bold" style="font-size:13px;">Sắp xếp</label>
+                                <label class="font-weight-bold" style="font-size:13px;">Sort By</label>
                                 <select name="sortPrice" class="form-control form-control-sm">
-                                    <option value="">Mặc định</option>
-                                    <option value="asc"  ${param.sortPrice == 'asc'  ? 'selected' : ''}>Giá tăng dần</option>
-                                    <option value="desc" ${param.sortPrice == 'desc' ? 'selected' : ''}>Giá giảm dần</option>
+                                    <option value="">Default</option>
+                                    <option value="asc"  ${param.sortPrice == 'asc'  ? 'selected' : ''}>Price: Low to High</option>
+                                    <option value="desc" ${param.sortPrice == 'desc' ? 'selected' : ''}>Price: High to Low</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary btn-sm btn-block">Lọc</button>
+                                <button type="submit" class="btn btn-primary btn-sm btn-block">Apply Filters</button>
                             </div>
                         </div>
                     </form>
@@ -87,16 +91,16 @@
                                                         <c:choose>
                                                             <c:when test="${o.discount > 0}">
                                                                 <div style="text-decoration: line-through; color: gray; font-size:14px;">
-                                                                    <fmt:formatNumber value="${o.price}" type="number" groupingUsed="true"/> đ
+                                                                    <fmt:formatNumber value="${o.price}" type="number" groupingUsed="true"/> VND
                                                                 </div>
                                                                 <div style="color: red; font-weight: bold; font-size:18px;">
-                                                                    <fmt:formatNumber value="${o.price - (o.price * o.discount / 100)}" type="number" groupingUsed="true"/> đ
+                                                                    <fmt:formatNumber value="${o.price - (o.price * o.discount / 100)}" type="number" groupingUsed="true"/> VND
                                                                 </div>
                                                                 <div style="font-size:12px; color:green;">-${o.discount}% OFF</div>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <div style="font-weight: bold; font-size:18px;">
-                                                                    <fmt:formatNumber value="${o.price}" type="number" groupingUsed="true"/> đ
+                                                                    <fmt:formatNumber value="${o.price}" type="number" groupingUsed="true"/> VND
                                                                 </div>
                                                             </c:otherwise>
                                                         </c:choose>

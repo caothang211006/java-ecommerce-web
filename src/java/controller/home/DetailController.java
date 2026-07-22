@@ -30,22 +30,23 @@ public class DetailController extends HttpServlet {
         List<Category> listC = new CategoryDAO().listAll();
         Product last = dao.getLast();
 
-        // Ghi nháº­n sáº£n pháº©m Ä‘Ã£ xem vÃ o session (tá»‘i Ä‘a 20 sp)
         HttpSession session = request.getSession();
         List<String> viewedIds = (List<String>) session.getAttribute("viewedProducts");
-        if (viewedIds == null) viewedIds = new ArrayList<>();
-        viewedIds.remove(id); // trÃ¡nh trÃ¹ng
-        viewedIds.add(0, id); // thÃªm vÃ o Ä‘áº§u
-        if (viewedIds.size() > 20) viewedIds = viewedIds.subList(0, 20);
+        if (viewedIds == null) {
+            viewedIds = new ArrayList<>();
+        }
+        viewedIds.remove(id);
+        viewedIds.add(0, id);
+        if (viewedIds.size() > 20) {
+            viewedIds = viewedIds.subList(0, 20);
+        }
         session.setAttribute("viewedProducts", viewedIds);
 
-        // LÆ°u vÃ o DB ngay náº¿u Ä‘Ã£ login
         Account logged = (Account) session.getAttribute("acc");
         if (logged != null) {
             new ViewHistoryDAO().saveView(logged.getAccount(), id);
         }
 
-        // TÃ­nh phÃ¢n khÃºc thu nháº­p dá»±a trÃªn giÃ¡ trung bÃ¬nh cÃ¡c sp Ä‘Ã£ xem
         if (!viewedIds.isEmpty()) {
             long totalPrice = 0;
             int count = 0;
@@ -59,24 +60,28 @@ public class DetailController extends HttpServlet {
             long avgPrice = count > 0 ? totalPrice / count : 0;
             String segment;
             if (avgPrice < 5000000) {
-                segment = "Thu nháº­p tháº¥p";
+                segment = "Low income";
             } else if (avgPrice <= 15000000) {
-                segment = "Thu nháº­p trung bÃ¬nh";
+                segment = "Middle income";
             } else {
-                segment = "Thu nháº­p cao";
+                segment = "High income";
             }
             session.setAttribute("userSegment", segment);
         }
 
-        // Láº¥y danh sÃ¡ch sp Ä‘Ã£ xem Ä‘á»ƒ hiá»ƒn thá»‹ (tá»‘i Ä‘a 8)
         List<Product> viewedProductList = new ArrayList<>();
         List<String> vIds = (List<String>) session.getAttribute("viewedProducts");
         if (vIds != null) {
             int count2 = 0;
             for (String pid : vIds) {
-                if (count2 >= 8) break;
+                if (count2 >= 8) {
+                    break;
+                }
                 Product vp = dao.getObjectById(pid);
-                if (vp != null) { viewedProductList.add(vp); count2++; }
+                if (vp != null) {
+                    viewedProductList.add(vp);
+                    count2++;
+                }
             }
         }
 

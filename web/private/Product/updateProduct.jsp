@@ -36,7 +36,6 @@
                             </div>
                         </div>
 
-                        <!-- FIX: Thêm dropdown Category, pre-select category hiện tại -->
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label font-weight-bold">Category <span class="text-danger">*</span></label>
                             <div class="col-sm-9">

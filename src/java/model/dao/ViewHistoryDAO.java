@@ -16,9 +16,13 @@ public class ViewHistoryDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, account);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(rs.getString("productId"));
+                while (rs.next()) {
+                    list.add(rs.getString("productId"));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -30,11 +34,17 @@ public class ViewHistoryDAO {
             ps.setString(1, account);
             ps.setString(2, productId);
             ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveAllViewed(String account, List<String> viewedIds) {
-        if (viewedIds == null || viewedIds.isEmpty()) return;
-        for (String pid : viewedIds) saveView(account, pid);
+        if (viewedIds == null || viewedIds.isEmpty()) {
+            return;
+        }
+        for (String pid : viewedIds) {
+            saveView(account, pid);
+        }
     }
 }

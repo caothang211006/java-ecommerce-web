@@ -18,7 +18,6 @@
                 <div class="col-md-7">
                     <h3 class="mb-4">Add new category</h3>
 
-                    <%-- FIX: action="/manageCategory/add" thay vì action="/manageCategory" --%>
                     <form action="${pageContext.request.contextPath}/manageCategory/add" method="post">
 
                         <div class="form-group row">

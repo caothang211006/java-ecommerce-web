@@ -26,13 +26,11 @@ public class AccountToggleUseController extends HttpServlet {
         AccountDAO dao = new AccountDAO();
         Account acc = dao.getObjectById(targetId);
 
-        // Null check
         if (acc == null) {
             response.sendRedirect(request.getContextPath() + "/account");
             return;
         }
 
-        // Không cho tự deactivate chính mình
         if (logged.getAccount().equals(targetId) && !newStatus) {
             request.setAttribute("error", "You cannot deactivate your own account!");
             request.setAttribute("listA", dao.listAll());
@@ -40,7 +38,6 @@ public class AccountToggleUseController extends HttpServlet {
             return;
         }
 
-        // Không cho deactivate nếu chỉ còn 1 admin đang active
         if (acc.getRoleInSystem() == 1 && !newStatus && dao.countActiveAdmins() <= 1) {
             request.setAttribute("error", "Cannot deactivate! There must be at least one active admin.");
             request.setAttribute("listA", dao.listAll());

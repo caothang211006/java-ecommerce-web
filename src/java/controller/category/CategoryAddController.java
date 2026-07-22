@@ -17,13 +17,11 @@ public class CategoryAddController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
 
-        // GET -> hiá»‡n form thÃªm
         if (request.getMethod().equalsIgnoreCase("GET")) {
             request.getRequestDispatcher("/private/Category/addCategory.jsp").forward(request, response);
             return;
         }
 
-        // POST -> xá»­ lÃ½ thÃªm
         Category c = new Category();
         c.setCategoryName(request.getParameter("categoryName"));
         c.setMemo(request.getParameter("memo"));

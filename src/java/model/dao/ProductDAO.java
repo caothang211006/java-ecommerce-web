@@ -60,9 +60,13 @@ public class ProductDAO implements Accessible<Product> {
              PreparedStatement ps = con.prepareStatement(sql.toString())) {
             bindParams(ps, params);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapProduct(rs));
+                while (rs.next()) {
+                    list.add(mapProduct(rs));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -73,8 +77,12 @@ public class ProductDAO implements Accessible<Product> {
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(mapProduct(rs));
-        } catch (Exception e) { e.printStackTrace(); }
+            while (rs.next()) {
+                list.add(mapProduct(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -87,7 +95,9 @@ public class ProductDAO implements Accessible<Product> {
             while (rs.next()) {
                 list.add(new Category(rs.getInt("typeId"), rs.getString("categoryName"), rs.getString("memo")));
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -96,8 +106,12 @@ public class ProductDAO implements Accessible<Product> {
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) return mapProduct(rs);
-        } catch (Exception e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return mapProduct(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -107,9 +121,13 @@ public class ProductDAO implements Accessible<Product> {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, typeId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapProduct(rs);
+                if (rs.next()) {
+                    return mapProduct(rs);
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -120,9 +138,13 @@ public class ProductDAO implements Accessible<Product> {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, typeId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapProduct(rs));
+                while (rs.next()) {
+                    list.add(mapProduct(rs));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -133,9 +155,13 @@ public class ProductDAO implements Accessible<Product> {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, account);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapProduct(rs));
+                while (rs.next()) {
+                    list.add(mapProduct(rs));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -146,9 +172,13 @@ public class ProductDAO implements Accessible<Product> {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "%" + txtSearch.trim() + "%");
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapProduct(rs));
+                while (rs.next()) {
+                    list.add(mapProduct(rs));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -159,9 +189,13 @@ public class ProductDAO implements Accessible<Product> {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapProduct(rs);
+                if (rs.next()) {
+                    return mapProduct(rs);
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -181,7 +215,9 @@ public class ProductDAO implements Accessible<Product> {
             ps.setInt(9, p.getPrice());
             ps.setInt(10, p.getDiscount());
             return ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -199,7 +235,9 @@ public class ProductDAO implements Accessible<Product> {
             ps.setInt(7, p.getDiscount());
             ps.setString(8, p.getProductId());
             return ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -207,10 +245,12 @@ public class ProductDAO implements Accessible<Product> {
     public int deleteRec(Product p) {
         String sql = "DELETE FROM products WHERE productId=?";
         try (Connection con = new ConnectDB().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, p.getProductId());
             return ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 

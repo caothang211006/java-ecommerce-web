@@ -16,9 +16,13 @@ public class CartDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, account);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) cart.put(rs.getString("productId"), rs.getInt("quantity"));
+                while (rs.next()) {
+                    cart.put(rs.getString("productId"), rs.getInt("quantity"));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return cart;
     }
 
@@ -40,6 +44,8 @@ public class CartDAO {
                     }
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

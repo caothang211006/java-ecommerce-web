@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Date;
 
-/**
- *
- * @author nguye
- */
 public class Account {
 
     private String account;
@@ -26,7 +18,8 @@ public class Account {
     public Account() {
     }
 
-    public Account(String account, String pass, String lastName, String firstName, Date birthday, boolean gender, String phone, boolean isUse, int roleInSystem) {
+    public Account(String account, String pass, String lastName, String firstName, Date birthday,
+            boolean gender, String phone, boolean isUse, int roleInSystem) {
         this.account = account;
         this.pass = pass;
         this.lastName = lastName;
@@ -118,5 +111,4 @@ public class Account {
         this.sessionId = sessionId;
     }
 
-    
 }

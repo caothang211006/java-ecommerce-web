@@ -19,7 +19,6 @@ public class AccountDeleteController extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        // Kiá»ƒm tra cÃ²n product khÃ´ng
         if (!new ProductDAO().listProductByAccount(id).isEmpty()) {
             request.setAttribute("error", "Cannot delete! This account still has products.");
             request.setAttribute("listA", new AccountDAO().listAll());

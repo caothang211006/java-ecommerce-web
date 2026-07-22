@@ -21,7 +21,6 @@ public class ProductUpdateController extends HttpServlet {
 
         ProductDAO dao = new ProductDAO();
 
-        // GET -> hiá»‡n form chá»‰nh sá»­a
         if (request.getMethod().equalsIgnoreCase("GET")) {
             String id = request.getParameter("id");
             Product p = dao.getObjectById(id);
@@ -32,7 +31,6 @@ public class ProductUpdateController extends HttpServlet {
             return;
         }
 
-        // POST -> xá»­ lÃ½ cáº­p nháº­t
         Product p = new Product();
         p.setProductId(request.getParameter("productId"));
         p.setProductName(request.getParameter("productName"));
@@ -42,7 +40,6 @@ public class ProductUpdateController extends HttpServlet {
         p.setPrice(Integer.parseInt(request.getParameter("price")));
         p.setDiscount(Integer.parseInt(request.getParameter("discount")));
 
-        // FIX: set typeId
         Category c = new Category();
         c.setTypeId(Integer.parseInt(request.getParameter("typeId")));
         p.setType(c);

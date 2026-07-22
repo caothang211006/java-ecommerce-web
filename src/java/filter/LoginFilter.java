@@ -13,15 +13,30 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Account;
 
+/**
+ * Guards the private areas of the site.
+ *
+ * Two separate checks, in order:
+ *   1. Authentication - is anybody signed in at all?
+ *   2. Authorisation  - is that person an administrator?
+ *
+ * Every path this filter covers is an administrative screen, so all of them
+ * require the admin role. Previously only /account did, which meant any
+ * signed-in customer could reach /manageProduct/delete or
+ * /manageCategory/delete simply by typing the URL.
+ */
 @WebFilter(urlPatterns = {
+    "/account",
     "/account/*",
-    "/manageCategory/*",
-    "/manageProduct/*",
     "/manageCategory",
+    "/manageCategory/*",
     "/manageProduct",
-    "/account"
+    "/manageProduct/*"
 })
 public class LoginFilter implements Filter {
+
+    /** Value of accounts.roleInSystem that marks an administrator. */
+    private static final int ROLE_ADMIN = 1;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -31,9 +46,9 @@ public class LoginFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         HttpSession session = req.getSession(false);
+        Account logged = session == null ? null : (Account) session.getAttribute("acc");
 
-        if (session == null || session.getAttribute("acc") == null) {
-            // Lưu lại URL trước đó (bao gồm cả query string)
+        if (logged == null) {
             HttpSession newSession = req.getSession();
             String query = req.getQueryString();
             String fullUrl = req.getServletPath() + (query != null ? "?" + query : "");
@@ -43,17 +58,22 @@ public class LoginFilter implements Filter {
             return;
         }
 
-        // Đã login → kiểm tra thêm quyền truy cập /account
-        String path = req.getServletPath();
-        Account logged = (Account) session.getAttribute("acc");
-        if ((path.equals("/account") || path.startsWith("/account/")) && logged.getRoleInSystem() != 1) {
-            res.sendRedirect(req.getContextPath() + "/home");
+        if (logged.getRoleInSystem() != ROLE_ADMIN) {
+            // Signed in, but not an admin. Answer 403 rather than redirecting,
+            // so the refusal is explicit instead of looking like a routing quirk.
+            res.sendError(HttpServletResponse.SC_FORBIDDEN,
+                    "You do not have permission to access this area.");
             return;
         }
 
         chain.doFilter(request, response);
     }
 
-    @Override public void init(FilterConfig fc) throws ServletException {}
-    @Override public void destroy() {}
+    @Override
+    public void init(FilterConfig fc) throws ServletException {
+    }
+
+    @Override
+    public void destroy() {
+    }
 }

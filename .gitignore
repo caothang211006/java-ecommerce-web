@@ -9,6 +9,15 @@ nbproject/private/
 .DS_Store
 Thumbs.db
 
+# NetBeans / editor backup files
+*~
+
 .env
 .env.*
 !.env.example
+
+# Root-level duplicates of web/images/banner.png and web/images/logo.png (~10 MB).
+# The leading slash anchors these to the repo root, so the real images under
+# web/images/ are still tracked.
+/banner.png
+/logo.png

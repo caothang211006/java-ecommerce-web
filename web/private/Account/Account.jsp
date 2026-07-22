@@ -34,7 +34,6 @@
                     </a>
                 </div>
 
-                <!-- Filter by role -->
                 <div class="mb-3">
                     <a href="${pageContext.request.contextPath}/account"
                        class="btn btn-sm ${empty param.role ? 'btn-dark' : 'btn-outline-dark'}">All</a>

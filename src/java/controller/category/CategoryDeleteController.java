@@ -20,7 +20,6 @@ public class CategoryDeleteController extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
 
-        // Kiểm tra còn product không
         ProductDAO productDAO = new ProductDAO();
         if (!productDAO.listProductByCategory(String.valueOf(id)).isEmpty()) {
             List<Category> listC = new CategoryDAO().listAll();
@@ -30,7 +29,6 @@ public class CategoryDeleteController extends HttpServlet {
             return;
         }
 
-        // Không còn product → cho xóa
         Category c = new Category();
         c.setTypeId(id);
         new CategoryDAO().deleteRec(c);

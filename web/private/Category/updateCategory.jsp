@@ -18,7 +18,6 @@
                 <div class="col-md-7">
                     <h3 class="mb-4">Update category</h3>
 
-                    <%-- FIX: action="/manageCategory/update" thay vì action="/manageCategory" --%>
                     <form action="${pageContext.request.contextPath}/manageCategory/update" method="post">
                         <input type="hidden" name="typeId" value="${cat.typeId}"/>
 

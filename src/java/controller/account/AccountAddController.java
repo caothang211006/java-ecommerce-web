@@ -17,13 +17,11 @@ public class AccountAddController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // GET -> hiá»‡n form thÃªm
         if (request.getMethod().equalsIgnoreCase("GET")) {
             request.getRequestDispatcher("/private/Account/addAccount.jsp").forward(request, response);
             return;
         }
 
-        // POST -> xá»­ lÃ½ thÃªm
         Account acc = new Account();
         acc.setAccount(request.getParameter("account"));
         acc.setPass(request.getParameter("pass"));

@@ -19,7 +19,6 @@ public class ProductDeleteController extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        // Kiá»ƒm tra cÃ²n order khÃ´ng
         if (!new OrderDAO().listByProduct(id).isEmpty()) {
             request.setAttribute("error", "Cannot delete! This product still has orders.");
             request.setAttribute("listP", new ProductDAO().listAll());

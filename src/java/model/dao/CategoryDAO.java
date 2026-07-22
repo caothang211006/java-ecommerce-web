@@ -24,7 +24,9 @@ public class CategoryDAO implements Accessible<Category> {
                 c.setMemo(rs.getString("memo"));
                 list.add(c);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -43,7 +45,9 @@ public class CategoryDAO implements Accessible<Category> {
                     return c;
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -55,7 +59,9 @@ public class CategoryDAO implements Accessible<Category> {
             ps.setString(1, c.getCategoryName());
             ps.setString(2, c.getMemo());
             return ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -68,7 +74,9 @@ public class CategoryDAO implements Accessible<Category> {
             ps.setString(2, c.getMemo());
             ps.setInt(3, c.getTypeId());
             return ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -79,7 +87,9 @@ public class CategoryDAO implements Accessible<Category> {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, c.getTypeId());
             return ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 }

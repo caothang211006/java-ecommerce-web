@@ -21,7 +21,6 @@ public class LogoutController extends HttpServlet {
             Account acc = (Account) session.getAttribute("acc");
             if (acc != null) {
 
-                // LÆ°u cart vÃ o DB
                 Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
                 new CartDAO().saveCart(acc.getAccount(), cart);
             }

@@ -1,0 +1,39 @@
+# Build context hygiene. Without this the context carries ~10 MB of duplicated
+# images plus prebuilt output, which slows every build and busts the layer cache.
+
+.git
+.gitignore
+
+# Compiled output. The image rebuilds these from source.
+build/
+dist/
+*.class
+*.war
+*.ear
+
+# NetBeans local state
+nbproject/private/
+build.xml
+nbproject/build-impl.xml~
+
+# Root-level duplicates of web/images/banner.png and web/images/logo.png (~10 MB).
+# The leading slash anchors these to the context root so the real images under
+# web/images/ are NOT excluded.
+/banner.png
+/logo.png
+
+# Secrets must never enter the image
+.env
+.env.*
+!.env.example
+
+# SQL Server leftovers from before the MySQL migration
+*_sqlserver.sql
+ProductIntro_WS2_ThangNDC_SE203709.sql
+
+# Docs
+PROJECT_OVERVIEW.md
+README.md
+
+.DS_Store
+Thumbs.db

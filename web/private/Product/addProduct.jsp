@@ -40,7 +40,6 @@
                             </div>
                         </div>
 
-                        <!-- FIX: Thêm dropdown Category -->
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label font-weight-bold">Category <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
@@ -73,7 +72,7 @@
                             <label class="col-sm-3 col-form-label font-weight-bold">Unit</label>
                             <div class="col-sm-9">
                                 <input type="text" name="unit" class="form-control"
-                                       placeholder="e.g. Cái, Bộ, Đôi" value="Cái"/>
+                                       placeholder="e.g. pcs, set, pair" value="pcs"/>
                             </div>
                         </div>
 

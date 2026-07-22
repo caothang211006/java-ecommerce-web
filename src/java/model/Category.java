@@ -1,14 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author nguye
- */
 public class Category {
+
     private int typeId;
     private String categoryName;
     private String memo;
@@ -48,8 +41,10 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" + "typeId=" + typeId + ", categoryName=" + categoryName + ", memo=" + memo + '}';
+        return "Category{"
+                + "typeId=" + typeId
+                + ", categoryName=" + categoryName
+                + ", memo=" + memo
+                + '}';
     }
-    
-    
 }

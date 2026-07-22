@@ -37,25 +37,23 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
-        // POST: xử lý đặt hàng
         String address = request.getParameter("address");
         String phone   = request.getParameter("phone");
 
         if (address == null || address.trim().isEmpty() || phone == null || phone.trim().isEmpty()) {
-            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
+            request.setAttribute("error", "Please enter all required information.");
             request.getRequestDispatcher("/private/Cart/Checkout.jsp").forward(request, response);
             return;
         }
 
         int orderId = new OrderDAO().createOrder(acc.getAccount(), address.trim(), phone.trim(), cart);
         if (orderId > 0) {
-            // Xóa cart sau khi đặt hàng
             session.removeAttribute("cart");
             new model.dao.CartDAO().saveCart(acc.getAccount(), null);
             response.sendRedirect(request.getContextPath() + "/orderHistory?success=1");
         } else {
-            request.setAttribute("error", "Đặt hàng thất bại, vui lòng thử lại!");
-            request.getRequestDispatcher("/private/Checkout.jsp").forward(request, response);
+            request.setAttribute("error", "Order placement failed. Please try again.");
+            request.getRequestDispatcher("/private/Cart/Checkout.jsp").forward(request, response);
         }
     }
 

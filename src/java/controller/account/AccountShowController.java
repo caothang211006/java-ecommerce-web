@@ -32,7 +32,6 @@ public class AccountShowController extends HttpServlet {
         }
         request.setAttribute("listA", list);
 
-        // TÃ­nh phÃ¢n khÃºc cho tá»«ng account
         Map<String, String> segmentMap = new HashMap<>();
         ViewHistoryDAO vhDao = new ViewHistoryDAO();
         ProductDAO pdao = new ProductDAO();

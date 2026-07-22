@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<fmt:setLocale value="vi_VN"/>
+<fmt:setLocale value="en_US"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -49,7 +49,7 @@
                             </td>
                             <td>${p.productName}</td>
                             <td>${p.unit}</td>
-                            <td><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/> đ</td>
+                            <td><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/> VND</td>
                             <td>${p.discount}%</td>
                             <td>${p.postedDate}</td>
                             <td>${p.account.account}</td>
@@ -57,7 +57,6 @@
                                 <a href="${pageContext.request.contextPath}/manageProduct/update?id=${p.productId}"
                                    class="btn btn-primary btn-sm">Update</a>
 
-                                <%-- FIX: POST form thay vì GET link để tránh xóa nhầm --%>
                                 <form action="${pageContext.request.contextPath}/manageProduct/delete"
                                       method="post" style="display:inline;"
                                       onsubmit="return confirm('Delete product: ${p.productName}?')">

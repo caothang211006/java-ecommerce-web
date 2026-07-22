@@ -8,7 +8,7 @@ public class Order {
     private Timestamp orderDate;
     private String address;
     private String phone;
-    private int status; // 0: chờ xử lý, 1: đang giao, 2: hoàn thành, 3: hủy
+    private int status; // 0: pending, 1: shipping, 2: completed, 3: canceled
 
     public Order() {}
 
@@ -27,11 +27,11 @@ public class Order {
 
     public String getStatusLabel() {
         switch (status) {
-            case 0: return "Chờ xử lý";
-            case 1: return "Đang giao";
-            case 2: return "Hoàn thành";
-            case 3: return "Đã hủy";
-            default: return "Không xác định";
+            case 0: return "Pending";
+            case 1: return "Shipping";
+            case 2: return "Completed";
+            case 3: return "Canceled";
+            default: return "Unknown";
         }
     }
 }

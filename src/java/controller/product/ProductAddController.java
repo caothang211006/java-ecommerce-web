@@ -22,7 +22,6 @@ public class ProductAddController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // GET -> hiện form thêm
         if (request.getMethod().equalsIgnoreCase("GET")) {
             List<Category> listC = new CategoryDAO().listAll();
             request.setAttribute("listC", listC);
@@ -30,8 +29,6 @@ public class ProductAddController extends HttpServlet {
             return;
         }
 
-        // POST -> xử lý thêm
-        // Validation
         String productId = request.getParameter("productId");
         String productName = request.getParameter("productName");
         String typeIdStr = request.getParameter("typeId");
@@ -57,12 +54,10 @@ public class ProductAddController extends HttpServlet {
             p.setDiscount(Integer.parseInt(request.getParameter("discount")));
             p.setPostedDate(new Timestamp(System.currentTimeMillis()));
 
-            // FIX: set typeId
             Category c = new Category();
             c.setTypeId(Integer.parseInt(typeIdStr));
             p.setType(c);
 
-            // FIX: set account từ session
             HttpSession session = request.getSession(false);
             Account acc = (Account) session.getAttribute("acc");
             p.setAccount(acc);

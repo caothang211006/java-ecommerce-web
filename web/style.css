@@ -4189,11 +4189,11 @@ footer, #footer {
     background-color: #222;
     color: white;
     text-align: center;
-    padding: 25px 0;   /* tăng chiều cao */
-    font-size: 18px;   /* chữ to hơn */
+    padding: 25px 0;   /* increase footer height */
+    font-size: 18px;   /* larger footer text */
 }
 .navbar-brand img {
-    height: 50px;   /* chỉnh theo ý bạn */
+    height: 50px;   /* adjust logo height */
     width: auto;
 }
 .navbar .container {

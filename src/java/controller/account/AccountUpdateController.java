@@ -19,7 +19,6 @@ public class AccountUpdateController extends HttpServlet {
 
         AccountDAO dao = new AccountDAO();
 
-        // GET -> hiá»‡n form chá»‰nh sá»­a
         if (request.getMethod().equalsIgnoreCase("GET")) {
             String id = request.getParameter("id");
             Account acc = dao.getObjectById(id);
@@ -28,11 +27,9 @@ public class AccountUpdateController extends HttpServlet {
             return;
         }
 
-        // POST -> xá»­ lÃ½ cáº­p nháº­t
         Account acc = new Account();
         acc.setAccount(request.getParameter("account"));
 
-        // Kiá»ƒm tra khÃ´ng cho háº¡ role admin cuá»‘i cÃ¹ng xuá»‘ng Staff
         int newRole = Integer.parseInt(request.getParameter("role"));
         Account current = dao.getObjectById(acc.getAccount());
         if (current != null && current.getRoleInSystem() == 1
@@ -42,7 +39,6 @@ public class AccountUpdateController extends HttpServlet {
             request.getRequestDispatcher("/private/Account/updateAccount.jsp").forward(request, response);
             return;
         }
-        // Giá»¯ pass cÅ© náº¿u user Ä‘á»ƒ trá»‘ng
         String newPass = request.getParameter("pass");
         if (newPass == null || newPass.trim().isEmpty()) {
             acc.setPass(current.getPass());

@@ -28,7 +28,6 @@ public class OrderHistoryController extends HttpServlet {
 
         OrderDAO dao = new OrderDAO();
 
-        // Xem chi tiết đơn hàng
         String orderIdParam = request.getParameter("orderId");
         if (orderIdParam != null) {
             int orderId = Integer.parseInt(orderIdParam);

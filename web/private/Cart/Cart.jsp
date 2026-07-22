@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<fmt:setLocale value="vi_VN"/>
+<fmt:setLocale value="en_US"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -52,7 +52,7 @@
                                         </a>
                                     </td>
                                     <td style="color:#e00; font-weight:bold;">
-                                        <fmt:formatNumber value="${finalPrice}" type="number" groupingUsed="true"/> đ
+                                        <fmt:formatNumber value="${finalPrice}" type="number" groupingUsed="true"/> VND
                                         <c:if test="${p.discount > 0}">
                                             <br/><small style="color:green;">-${p.discount}%</small>
                                         </c:if>
@@ -71,7 +71,7 @@
                                         </form>
                                     </td>
                                     <td style="font-weight:bold;">
-                                        <fmt:formatNumber value="${finalPrice * qty}" type="number" groupingUsed="true"/> đ
+                                        <fmt:formatNumber value="${finalPrice * qty}" type="number" groupingUsed="true"/> VND
                                     </td>
                                     <td>
                                         <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
@@ -89,7 +89,7 @@
                             <tr>
                                 <td colspan="4" class="text-right font-weight-bold">Total:</td>
                                 <td colspan="2" style="color:#e00; font-weight:bold; font-size:20px;">
-                                    <fmt:formatNumber value="${total}" type="number" groupingUsed="true"/> đ
+                                    <fmt:formatNumber value="${total}" type="number" groupingUsed="true"/> VND
                                 </td>
                             </tr>
                         </tfoot>
@@ -100,7 +100,7 @@
                             <i class="fa fa-arrow-left"></i> Continue Shopping
                         </a>
                         <a href="${pageContext.request.contextPath}/checkout" class="btn btn-success">
-                            <i class="fa fa-credit-card"></i> Đặt hàng
+                            <i class="fa fa-credit-card"></i> Checkout
                         </a>
                     </div>
                 </c:otherwise>

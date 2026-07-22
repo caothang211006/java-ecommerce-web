@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="vi_VN"/>
+<fmt:setLocale value="en_US"/>
 <div class="col-sm-3">
     <div class="card bg-light mb-3">
         <div class="card-header bg-primary text-white text-uppercase">
@@ -12,7 +12,15 @@
                 <li class="list-group-item ${tag == o.typeId ? 'active' : ''}">
                     <a href="${pageContext.request.contextPath}/home?typeId=${o.typeId}"
                        style="${tag == o.typeId ? 'color:white;' : ''} overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">
-                        ${o.categoryName}
+                        <c:choose>
+                            <c:when test="${o.typeId == 1}">Kitchenware</c:when>
+                            <c:when test="${o.typeId == 2}">Home Appliances</c:when>
+                            <c:when test="${o.typeId == 3}">Home Decor</c:when>
+                            <c:when test="${o.typeId == 4}">Fitness Equipment</c:when>
+                            <c:when test="${o.typeId == 5}">Smart Devices</c:when>
+                            <c:when test="${o.typeId == 6}">Fashion Apparel</c:when>
+                            <c:otherwise>${o.categoryName}</c:otherwise>
+                        </c:choose>
                     </a>
                 </li>
             </c:forEach>
@@ -20,7 +28,7 @@
     </div>
 
     <div class="card bg-light mb-3">
-        <div class="card-header bg-success text-white text-uppercase">Latest product</div>
+        <div class="card-header bg-success text-white text-uppercase">Latest Product</div>
         <div class="card-body">
             <c:choose>
                 <c:when test="${empty last}">
@@ -35,18 +43,17 @@
                         ${last.brief}
                     </p>
                     <p class="bloc_left_price">
-                        <fmt:formatNumber value="${last.price}" type="number" groupingUsed="true"/> đ
+                        <fmt:formatNumber value="${last.price}" type="number" groupingUsed="true"/> VND
                     </p>
                 </c:otherwise>
             </c:choose>
         </div>
     </div>
 
-    <!-- Sản phẩm xem gần đây -->
     <c:if test="${not empty viewedProductList}">
         <div class="card bg-light mb-3">
             <div class="card-header bg-warning text-white text-uppercase">
-                <i class="fa fa-history"></i> Xem gần đây
+                <i class="fa fa-history"></i> Recently Viewed
             </div>
             <ul class="list-group list-group-flush">
                 <c:forEach items="${viewedProductList}" var="vp" end="4">
@@ -58,7 +65,7 @@
                             <div style="overflow:hidden;">
                                 <div style="font-size:12px; font-weight:600; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${vp.productName}</div>
                                 <div style="font-size:12px; color:#e00; font-weight:bold;">
-                                    <fmt:formatNumber value="${vp.discount > 0 ? vp.price - (vp.price * vp.discount / 100) : vp.price}" type="number" groupingUsed="true"/> đ
+                                    <fmt:formatNumber value="${vp.discount > 0 ? vp.price - (vp.price * vp.discount / 100) : vp.price}" type="number" groupingUsed="true"/> VND
                                 </div>
                             </div>
                         </a>

@@ -14,7 +14,6 @@ import util.ConnectDB;
 
 public class OrderDAO {
 
-    // Tạo order mới, trả về orderId
     public int createOrder(String account, String address, String phone, Map<String, Integer> cart) {
         String sql = "INSERT INTO orders(account, address, phone) VALUES(?,?,?)";
         try (Connection con = new ConnectDB().getConnection();
@@ -30,7 +29,9 @@ public class OrderDAO {
                     return orderId;
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return -1;
     }
 
@@ -52,7 +53,6 @@ public class OrderDAO {
         }
     }
 
-    // Lấy danh sách order theo account
     public List<Order> listByAccount(String account) {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT * FROM orders WHERE account = ? ORDER BY orderDate DESC";
@@ -60,25 +60,31 @@ public class OrderDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, account);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapOrder(rs));
+                while (rs.next()) {
+                    list.add(mapOrder(rs));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    // Lấy tất cả order (admin)
     public List<Order> listAll() {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT * FROM orders ORDER BY orderDate DESC";
         try (Connection con = new ConnectDB().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(mapOrder(rs));
-        } catch (Exception e) { e.printStackTrace(); }
+            while (rs.next()) {
+                list.add(mapOrder(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    // Lấy chi tiết order
     public List<OrderDetail> getOrderDetails(int orderId) {
         List<OrderDetail> list = new ArrayList<>();
         String sql = "SELECT od.*, p.productName, p.productImage FROM orderdetails od "
@@ -99,11 +105,12 @@ public class OrderDAO {
                     list.add(od);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    // Kiểm tra product còn order không
     public List<Order> listByProduct(String productId) {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT o.* FROM orders o JOIN orderdetails od ON o.orderId = od.orderId WHERE od.productId = ?";
@@ -111,13 +118,16 @@ public class OrderDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapOrder(rs));
+                while (rs.next()) {
+                    list.add(mapOrder(rs));
+                }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    // Cập nhật status đơn hàng (admin)
     public void updateStatus(int orderId, int status) {
         String sql = "UPDATE orders SET status = ? WHERE orderId = ?";
         try (Connection con = new ConnectDB().getConnection();
@@ -125,7 +135,9 @@ public class OrderDAO {
             ps.setInt(1, status);
             ps.setInt(2, orderId);
             ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Order mapOrder(ResultSet rs) throws Exception {
