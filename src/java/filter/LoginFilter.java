@@ -16,14 +16,20 @@ import model.Account;
 /**
  * Guards the private areas of the site.
  *
- * Two separate checks, in order:
- *   1. Authentication - is anybody signed in at all?
- *   2. Authorisation  - is that person an administrator?
+ * Two checks run in order: first authentication (is anyone signed in?), then
+ * authorisation (does that person's role allow this particular area?).
  *
- * Every path this filter covers is an administrative screen, so all of them
- * require the admin role. Previously only /account did, which meant any
- * signed-in customer could reach /manageProduct/delete or
- * /manageCategory/delete simply by typing the URL.
+ * There are two tiers of staff:
+ *
+ *   role 1  admin  - full access, including the account management screens
+ *   role 2  staff  - may manage the catalogue (products and categories) but
+ *                    not user accounts
+ *
+ * So /account is admin-only, while /manageProduct and /manageCategory are open
+ * to both. Anyone signed in with a lower role, or not signed in at all, is
+ * turned away. The menu already hides links a user may not use; this filter is
+ * the enforcement behind that, since a hidden link can still be reached by
+ * typing the URL.
  */
 @WebFilter(urlPatterns = {
     "/account",
@@ -35,8 +41,8 @@ import model.Account;
 })
 public class LoginFilter implements Filter {
 
-    /** Value of accounts.roleInSystem that marks an administrator. */
     private static final int ROLE_ADMIN = 1;
+    private static final int ROLE_STAFF = 2;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -58,15 +64,39 @@ public class LoginFilter implements Filter {
             return;
         }
 
-        if (logged.getRoleInSystem() != ROLE_ADMIN) {
-            // Signed in, but not an admin. Answer 403 rather than redirecting,
-            // so the refusal is explicit instead of looking like a routing quirk.
+        if (!isAuthorised(req.getServletPath(), logged.getRoleInSystem())) {
+            // Signed in, but this role may not use this area. Answer 403 rather
+            // than redirecting, so the refusal is explicit instead of looking
+            // like a routing quirk.
             res.sendError(HttpServletResponse.SC_FORBIDDEN,
                     "You do not have permission to access this area.");
             return;
         }
 
         chain.doFilter(request, response);
+    }
+
+    /**
+     * Decides whether a role may use a path.
+     *
+     * Account management is admin-only. Catalogue management is open to admin
+     * and staff. Anything else this filter covers defaults to admin-only, so a
+     * newly added protected path is locked down until it is explicitly opened.
+     */
+    private boolean isAuthorised(String path, int role) {
+        boolean accountArea = path.equals("/account") || path.startsWith("/account/");
+        if (accountArea) {
+            return role == ROLE_ADMIN;
+        }
+
+        boolean catalogueArea =
+                path.equals("/manageProduct") || path.startsWith("/manageProduct/")
+                || path.equals("/manageCategory") || path.startsWith("/manageCategory/");
+        if (catalogueArea) {
+            return role == ROLE_ADMIN || role == ROLE_STAFF;
+        }
+
+        return role == ROLE_ADMIN;
     }
 
     @Override
